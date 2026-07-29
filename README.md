@@ -86,6 +86,22 @@ only data source is:
 starcat search "$QUERY" --source all --limit 30
 ```
 
+## Troubleshooting
+
+If `starcat <query>` only shows Alfred's default Web Search results, install
+v0.1.1 or newer. Older versions incorrectly enabled Alfred-side result filtering,
+so the query was not forwarded to Starcat CLI.
+
+If the list reports `Starcat TLS certificate fingerprint mismatch`, the CLI's
+saved pairing no longer matches the active MCP Service. Keep the intended Starcat
+instance running, copy a fresh pairing command from Settings → MCP, pair again,
+then run:
+
+```bash
+starcat doctor
+starcat search "starcat" --source all --limit 30
+```
+
 ## Development
 
 ```bash

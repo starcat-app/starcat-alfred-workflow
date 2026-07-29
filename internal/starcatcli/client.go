@@ -110,6 +110,11 @@ func (c Client) Search(ctx context.Context, query, source string, limit int) (Re
 	command.Stdout = &stdout
 	command.Stderr = &stderr
 	if err := command.Run(); err != nil {
+		// CommandContext 超时会直接终止 CLI，进程通常来不及写入稳定错误码。
+		// 优先保留 context 错误，让 Alfred 能区分“搜索超时”和普通执行失败。
+		if contextError := ctx.Err(); contextError != nil {
+			return Result{}, fmt.Errorf("starcat search failed: %w", contextError)
+		}
 		message := strings.TrimSpace(stderr.String())
 		if message == "" {
 			message = err.Error()

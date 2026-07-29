@@ -87,6 +87,21 @@ Workflow 不读取 Starcat SQLite、Keychain 或 GitHub 凭据，数据只来自
 starcat search "$QUERY" --source all --limit 30
 ```
 
+## 故障排查
+
+如果输入 `starcat <关键词>` 后只看到 Alfred 默认 Web Search，请先确认安装的是
+v0.1.1 或更高版本。旧版错误地开启了 Alfred 本地结果过滤，查询词不会传给
+Starcat CLI。
+
+如果列表显示 `Starcat TLS certificate fingerprint mismatch`，说明 CLI 保存的
+配对资料与当前 MCP Service 不一致。请保持当前 Starcat 实例运行，在「设置 →
+MCP」中复制新的配对命令，重新配对后执行：
+
+```bash
+starcat doctor
+starcat search "starcat" --source all --limit 30
+```
+
 ## 开发
 
 ```bash

@@ -36,6 +36,10 @@ jobs:
         run: |
           bash -n scripts/*.sh
           plutil -lint info.plist
+          # Starcat CLI owns dynamic searching. Local Alfred filtering would invoke
+          # the helper with an empty query and hide its prompt/error result.
+          test "$(plutil -extract objects.0.config.alfredfiltersresults raw info.plist)" = "false"
+          test "$(plutil -extract objects.0.config.argumenttype raw info.plist)" = "0"
       - name: Build universal helper
         run: |
           scripts/build.sh
