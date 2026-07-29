@@ -90,7 +90,7 @@ starcat search "$QUERY" --source all --limit 30
 ## 故障排查
 
 如果输入 `starcat <关键词>` 后只看到 Alfred 默认 Web Search，请先确认安装的是
-v0.1.1 或更高版本。旧版错误地开启了 Alfred 本地结果过滤，查询词不会传给
+v1.0.0 或更高版本。旧版错误地开启了 Alfred 本地结果过滤，查询词不会传给
 Starcat CLI。
 
 如果列表显示 `Starcat TLS certificate fingerprint mismatch`，说明 CLI 保存的

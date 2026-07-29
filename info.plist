@@ -172,7 +172,7 @@
 		<string></string>
 	</dict>
 	<key>version</key>
-	<string>0.1.1</string>
+	<string>1.0.0</string>
 	<key>webaddress</key>
 	<string>https://github.com/starcat-app/starcat-alfred-workflow</string>
 </dict>

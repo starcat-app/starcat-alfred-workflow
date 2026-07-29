@@ -89,7 +89,7 @@ starcat search "$QUERY" --source all --limit 30
 ## Troubleshooting
 
 If `starcat <query>` only shows Alfred's default Web Search results, install
-v0.1.1 or newer. Older versions incorrectly enabled Alfred-side result filtering,
+v1.0.0 or newer. Older versions incorrectly enabled Alfred-side result filtering,
 so the query was not forwarded to Starcat CLI.
 
 If the list reports `Starcat TLS certificate fingerprint mismatch`, the CLI's
