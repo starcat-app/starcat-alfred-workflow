@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: false
+      - name: Verify tag matches Workflow version
+        run: |
+          version="$(/usr/libexec/PlistBuddy -c 'Print :version' info.plist)"
+          expected="v${version}"
+          if [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Tag '${GITHUB_REF_NAME}' must use vMAJOR.MINOR.PATCH"
+            exit 1
+          fi
+          if [[ "${GITHUB_REF_NAME}" != "${expected}" ]]; then
+            echo "::error::Tag '${GITHUB_REF_NAME}' does not match info.plist version '${version}'"
+            exit 1
+          fi
+      - name: Verify and test
+        run: |
+          go mod verify
+          go test ./...
+          go test -race ./...
+          go vet ./...
+          go run golang.org/x/vuln/cmd/govulncheck@v1.6.0 ./...
+          bash -n scripts/*.sh
+          plutil -lint info.plist
+      - name: Build release assets
+        run: |
+          scripts/package.sh
+          lipo bin/starcat-alfred -verify_arch arm64 x86_64
+          shasum -a 256 dist/Starcat.alfredworkflow > dist/checksums.txt
+          unzip -p dist/Starcat.alfredworkflow info.plist > /tmp/starcat-alfred-info.plist
+          plutil -lint /tmp/starcat-alfred-info.plist
+      - name: Attest release assets
+        uses: actions/attest@v4
+        with:
+          subject-path: dist/*
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          release_args=()
+          if [[ "${GITHUB_REF_NAME}" == *-* ]]; then
+            release_args+=(--prerelease)
+          fi
+          gh release create "${GITHUB_REF_NAME}" \
+            dist/Starcat.alfredworkflow \
+            dist/checksums.txt \
+            "${release_args[@]}" \
+            --verify-tag \
+            --title "Starcat Alfred Workflow ${GITHUB_REF_NAME}" \
+            --generate-notes
