@@ -46,7 +46,11 @@ jobs:
         run: |
           scripts/package.sh
           lipo bin/starcat-alfred -verify_arch arm64 x86_64
-          shasum -a 256 dist/Starcat.alfredworkflow > dist/checksums.txt
+          (
+            cd dist
+            shasum -a 256 Starcat.alfredworkflow > checksums.txt
+            shasum -a 256 -c checksums.txt
+          )
           unzip -p dist/Starcat.alfredworkflow info.plist > /tmp/starcat-alfred-info.plist
           plutil -lint /tmp/starcat-alfred-info.plist
       - name: Attest release assets
