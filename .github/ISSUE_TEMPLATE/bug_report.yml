@@ -17,7 +17,7 @@ body:
     id: environment
     attributes:
       label: Environment
-      placeholder: macOS 15.6, Alfred 5.6, Starcat 1.4.0, starcat CLI 0.2.0
+      placeholder: macOS version, Alfred version, Starcat version, starcat CLI version
     validations:
       required: true
   - type: textarea
