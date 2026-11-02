@@ -16,7 +16,7 @@
 本地结果通过受限 Starcat deep link 打开，GitHub-only 结果在浏览器打开。
 
 - Go module：`github.com/starcat-app/starcat-alfred-workflow`
-- Go directive 1.25.0，toolchain Go 1.26.5
+- Go directive 1.26.10（受支持且含安全修补的构建基线）
 - Alfred Workflow `info.plist` / Script Filter
 - macOS Universal binary：arm64 + x86_64
 
@@ -36,11 +36,12 @@ go mod verify
 go test ./...
 go test -race ./...
 go vet ./...
-go run golang.org/x/vuln/cmd/govulncheck@v1.6.0 ./...
+go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 ./...
 bash -n scripts/*.sh
 plutil -lint info.plist
 ./scripts/build.sh
-lipo bin/starcat-alfred -verify_arch arm64 x86_64
+lipo bin/starcat-alfred -verify_arch arm64
+lipo bin/starcat-alfred -verify_arch x86_64
 git diff --check
 ```
 

@@ -13,6 +13,8 @@ permissions:
 jobs:
   release:
     runs-on: macos-15
+    env:
+      GOTOOLCHAIN: local
     steps:
       - uses: actions/checkout@v6
         with:
@@ -39,13 +41,14 @@ jobs:
           go test ./...
           go test -race ./...
           go vet ./...
-          go run golang.org/x/vuln/cmd/govulncheck@v1.6.0 ./...
+          go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 ./...
           bash -n scripts/*.sh
           plutil -lint info.plist
       - name: Build release assets
         run: |
           scripts/package.sh
-          lipo bin/starcat-alfred -verify_arch arm64 x86_64
+          lipo bin/starcat-alfred -verify_arch arm64
+          lipo bin/starcat-alfred -verify_arch x86_64
           (
             cd dist
             shasum -a 256 Starcat.alfredworkflow > checksums.txt
