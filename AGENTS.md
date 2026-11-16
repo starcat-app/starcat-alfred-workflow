@@ -16,7 +16,7 @@
 本地结果通过受限 Starcat deep link 打开，GitHub-only 结果在浏览器打开。
 
 - Go module：`github.com/starcat-app/starcat-alfred-workflow`
-- Go directive 1.26.10（受支持且含安全修补的构建基线）
+- Go directive 1.26.11（受支持且含安全修补的构建基线）
 - Alfred Workflow `info.plist` / Script Filter
 - macOS Universal binary：arm64 + x86_64
 
